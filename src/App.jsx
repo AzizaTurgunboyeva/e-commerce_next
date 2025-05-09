@@ -1,13 +1,12 @@
 import { useState } from 'react'
-import ReviewCard from './components/common/Review'
-import Card from './components/common/Card'
+import NewArrivalsSection from './app/Main/components/NewArrival';
 
 function App() {
 
   return (
     <>
       {/* <ReviewCard /> */}
-      {/* <Card /> */}
+      <NewArrivalsSection />
     </>
   );
 }
