@@ -1,4 +1,5 @@
 import { btnTypes, btnSizes } from "./constants";
+import { ButtonWrapper } from "./ButtonWrapper.styled";
 
 const Button = (props) => {
   const {

@@ -1,68 +1,67 @@
-// src/components/Review/Review.styled.jsx
 import styled from "styled-components";
 
 export const ReviewCardWrapper = styled.div`
-  width: ${({ width }) => width}px;
-  max-width: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 20px;
-  padding: 28px 32px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  background-color: #ffffff;
+  width: ${({ width }) => width}px;
   position: relative;
 
   .header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-  }
+    margin-bottom: 12px;
 
-  .star {
-    display: flex;
-    gap: 6px;
-  }
-
-  .moreIcon {
-    cursor: pointer;
-    color: rgba(0, 0, 0, 0.3);
-    font-size: 20px;
-    flex-shrink: 0;
+    .moreIcon {
+      margin-left: auto;
+      font-size: 18px;
+      cursor: pointer;
+      color: #999;
+      /* transition: color 0.2s ease; */
+    }
+    .moreIcon:hover {
+      color: #555;
+    }
   }
 
   .user {
     display: flex;
     align-items: center;
-    gap: 4.5px;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 12px;
 
     p {
-      font-size: 20px;
-      font-weight: 700;
-      line-height: 22px;
       margin: 0;
+      margin-right: 8px;
     }
-
     svg {
-      color: rgba(1, 171, 49, 1);
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
+      color: #28a745; /* green check */
+      font-size: 16px;
     }
   }
 
   .comments {
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1.5;
-    color: rgba(0, 0, 0, 0.6);
-    margin: 0;
+    flex: 1;
+    font-size: 14px;
+    line-height: 1.4;
+    color: #555;
+    margin: 0 0 16px;
   }
 
   .date {
-    font-weight: 500;
-    line-height: 22px;
-    color: rgba(0, 0, 0, 0.4);
+    font-size: 12px;
+    color: #999;
     margin: 0;
+    text-align: right;
+  }
+
+  @media (max-width: 400px) {
+    /* when width ≤ 400, you could de-emphasize border, etc */
+    border-color: transparent;
   }
 `;

@@ -1,36 +1,30 @@
-// src/components/Review/ReviewCard.jsx
 import React from "react";
-import { ReviewCardWrapper } from "./Review.styled";
-import StarRate from "../components/startRate";
 import { FaCircleCheck, FaEllipsis } from "react-icons/fa6";
+import StarRate from "../components/startRate.jsx";
+import { ReviewCardWrapper } from "./Review.styled.js";
 
-export default function ReviewCard({
-  width = 600,//default berildi
-  review: {
-    rating = 4.5,
-    userName = "Liam K.",
-    verified = true,
-    comment = "This t-shirt is a fusion of comfort and creativity. The fabric is soft, and the design speaks volumes about the designer's skill. It's like wearing a piece of art that reflects my passion for both design and fashion.",
-    datePosted = "August 18, 2023",
-  } = {},
-}) {
+export default function ReviewCard({c, width}) {
+ 
+  const  { rating, user, verified, text, datePosted } =c;
+  const showExtras = width > 400;
+  console.log(c);
+  
   return (
     <ReviewCardWrapper width={width}>
+     
       <div className="header">
-        <div className="star">
-          <StarRate rating={rating} />
-        </div>
-        {width > 400 && <FaEllipsis className="moreIcon" />}
+        <StarRate rating={rating} />
+        {showExtras && <FaEllipsis className="moreIcon" />}
       </div>
 
       <div className="user">
-        <p>{userName}</p>
-        {verified && <FaCircleCheck />}
+        <p>{user}</p>
+        {verified && showExtras && <FaCircleCheck />}
       </div>
 
-      <p className="comments">"{comment}"</p>
+      <p className="comments">"{text}"</p>
 
-      {width > 400 && <p className="date">Posted on {datePosted}</p>}
+      {showExtras && <p className="date">Posted on {datePosted}</p>}
     </ReviewCardWrapper>
   );
 }

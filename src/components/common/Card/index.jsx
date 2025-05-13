@@ -1,22 +1,21 @@
-// src/components/Card/Card.jsx
 import React from "react";
 import { CardWrapper } from "./Card.styled";
 import StarRate from "../components/startRate";
+import { Link } from "react-router";
 
-export default function Card({
-  width,
-  images,
-  title,
-  rating,
-  price,
-  oldPrice,
-  discount,
-  actions = [],
-}) {
+export default function Card(props) {
+  const { images = [], id, title, rating, price, oldPrice, discount } = props;
+
   return (
-    <CardWrapper width={width}>
+    <CardWrapper>
       <div className="img-list">
-        {images[0] && <img src={images[0]} alt={title} />}
+        <Link key={id} to={`/productDetail/${id}`}>
+          {images.length > 0 ? (
+            <img src={images[0]} alt={title} />
+          ) : (
+            <div>No Image</div>
+          )}
+        </Link>
       </div>
 
       <div className="card-title">
@@ -24,7 +23,7 @@ export default function Card({
 
         <div className="c-rate">
           <StarRate rating={rating} />
-          <p>{rating.toFixed(1)}/5</p>
+          <p>{rating.toFixed(1)}/10</p>
         </div>
 
         <div className="prices">

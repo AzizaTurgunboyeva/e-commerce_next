@@ -7,33 +7,54 @@ export const ButtonWrapper = styled.button`
   gap: 14px;
   border-radius: 62px;
   border: none;
+  cursor: pointer;
 
-  .btn-primary {
+  /* Primary button styles */
+  &.btn-primary {
     background-color: black;
     color: white;
   }
-  .btn-secondary {
+
+  /* Secondary button styles */
+  &.btn-secondary {
     background-color: #f0f0f0;
     color: black;
   }
-  .btn-white {
+
+  /* White button styles */
+  &.btn-white {
     background-color: white;
     color: black;
-  }
-  .btn-medium {
-    height: 48px;
-  }
-  .btn-small {
-    height: 42px;
-  }
-  .btn-large {
-    height: 56px;
+    border: 1px solid #e0e0e0;
   }
 
-  .button.btn-full {
+  /* Size variations */
+  &.btn-medium {
+    height: 48px;
+    padding: 0 24px;
+  }
+
+  &.btn-small {
+    height: 42px;
+    padding: 0 16px;
+    font-size: 0.9em;
+  }
+
+  &.btn-large {
+    height: 56px;
+    padding: 0 32px;
+    font-size: 1.1em;
+  }
+
+  /* Full width modifier */
+  &.btn-full {
     width: 100%;
   }
-  .button.p-0 {
-    padding: auto 12px;
+
+  /* Optional padding modifier */
+  &.p-0 {
+    padding: 0 12px;
   }
 `;
+
+

@@ -65,7 +65,7 @@ export const CardWrapper = styled.div`
   .prices {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     margin-top: 8px;
 
     .p-price {
@@ -74,17 +74,17 @@ export const CardWrapper = styled.div`
     }
 
     .p-oldPr {
-      font-size: 16px;
-      font-weight: 400;
+      font-size: 24px;
+      font-weight: 700;
       color: rgba(0, 0, 0, 0.4);
       text-decoration: line-through;
     }
 
     .p-discount {
-      margin-left: auto;
       font-size: 14px;
       font-weight: 500;
-      padding: 4px 8px;
+      text-align: center;
+      padding: 6px 14px;
       border-radius: 12px;
       background-color: rgba(255, 51, 51, 0.1);
       color: #ff3333;
