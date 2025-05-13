@@ -1,33 +1,76 @@
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router";
-import { useProductById, useProducts } from "../../hooks";
-import { useEffect, useState } from "react";
+import { useProductById, useProducts, useComments } from "../../hooks";
 import {
+  Container,
   HRLine,
   ProductCart,
-  ImagesWrapper,
+  Images,
   Thumbnails,
-  MainImageContainer,
+  ThumbnailImage,
+  MainImage,
   Details,
   Divider,
   Title,
   Rating,
   Prices,
+  CurrentPrice,
+  OldPrice,
+  Discount,
   Description,
   Colors,
+  ColorOption,
   Sizes,
+  SizeList,
+  SizeItem,
   AddCart,
+  QuantityControl,
+  QuantityButton,
+  AddToCartButton,
+  ReviewsContainer,
+  ReviewsHeader,
+  ReviewOption,
+  ReviewsListHeader,
+  ReviewsTitle,
+  ReviewActions,
+  ActionButton,
+  ReviewsList,
+  LoadMoreButton,
+  DetailsList,
+  FAQItem,
+  YouMightLike,
+  SectionTitle,
+  ProductGrid,
+  FadeIn,
 } from "./ProductDetail.styled";
+import { getRating } from "../../utils/getRating";
+import { productDetails, productFaqs, sizeList } from "./constant";
+import { toast } from "react-toastify";
+import ReviewCard from "../../components/Review";
+import { TickIcon, FilterIcon } from "../../assets/icons";
+import Card from "../../components/Card";
+
+const colorsList = [
+  { code: "#44260b", name: "Brown" },
+  { code: "#023902", name: "Green" },
+  { code: "#1f1f61", name: "Blue" },
+];
 
 function ProductDetails() {
   const { id } = useParams();
   const { data } = useProductById(id);
-  const { data: products } = useProducts();
+  const { data: products,isLoading } = useProducts();
+  const { data: reviews } = useComments();
+
   const limitedImages = data?.images.slice(0, 3);
   const limitedProducts = products?.slice(0, 4);
 
   useEffect(() => {
-    if (limitedImages?.length) setMainImage(limitedImages[0]);
+    if (limitedImages && limitedImages.length > 0) {
+      setMainImage(limitedImages[0]);
+    }
   }, [data]);
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
@@ -36,59 +79,113 @@ function ProductDetails() {
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [mainImage, setMainImage] = useState(limitedImages?.[0]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [visibleCount, setVisibleCount] = useState(6);
 
   const handleQuantity = (e) => {
-    if (e.target.innerText === "+") setQuantity((q) => q + 1);
-    else if (e.target.innerText === "-" && quantity > 1)
-      setQuantity((q) => q - 1);
+    if (e.target.innerText === "+") {
+      setQuantity(quantity + 1);
+    } else if (e.target.innerText === "-") {
+      if (quantity > 1) {
+        setQuantity(quantity - 1);
+      }
+    }
+  };
+
+  const handleSelect = (colorCode) => {
+    setSelectedColor(colorCode);
   };
 
   const handleSize = (e, size) => {
-    document
-      .querySelectorAll(".size-item")
-      .forEach((i) => i.classList.remove("active"));
+    const sizeItems = document.querySelectorAll(".size-item");
+    sizeItems.forEach((item) => item.classList.remove("active"));
     e.currentTarget.classList.add("active");
     setSelectedSize(size);
   };
 
+  const handleOption = (index) => {
+    setActiveIndex(index);
+  };
+  const options = ["Product Details", "Rating & Reviews", "FAQs"];
+
+  const handleLoadMore = () => {
+    setVisibleCount((prev) => prev + 6);
+  };
+
+  const handleAddToCart = () => {
+    if (!selectedSize || !selectedColor) {
+      toast.warning("Please select size and color before adding to cart.");
+      return;
+    }
+
+    const cart = JSON.parse(localStorage.getItem("cart") || "[]");
+
+    const cartItem = {
+      id: data.id,
+      title: data.title,
+      price: data.price,
+      oldPrice: data.oldPrice || null,
+      image: data.images?.[0],
+      size: selectedSize,
+      color: colorsList.find((color) => color.code === selectedColor)?.name,
+      quantity,
+    };
+
+    const existingIndex = cart.findIndex(
+      (item) =>
+        item.id === cartItem.id &&
+        item.size === cartItem.size &&
+        item.color === cartItem.color
+    );
+
+    if (existingIndex !== -1) {
+      cart[existingIndex].quantity += cartItem.quantity;
+    } else {
+      cart.push(cartItem);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    toast.success("Product added to cart!");
+  };
+
   return (
-    <>
-      <HrLine />
+    <Container>
+      <HRLine />
       <ProductCart>
-        <ImagesWrapper>
+        <Images>
           <Thumbnails>
-            {limitedImages?.map((img, i) => (
-              <img
-                key={i}
+            {limitedImages?.map((img, index) => (
+              <ThumbnailImage
+                key={index}
                 src={img}
-                alt={`thumb ${i}`}
+                alt={`Thumbnail ${index + 1}`}
                 className={mainImage === img ? "active" : ""}
                 onClick={() => setMainImage(img)}
               />
             ))}
           </Thumbnails>
-          <MainImageContainer>
-            <img src={mainImage} alt="main" />
-          </MainImageContainer>
-        </ImagesWrapper>
+          <MainImage>
+            <img src={mainImage} alt="Main product" />
+          </MainImage>
+        </Images>
         <Details>
           <Title>{data?.title}</Title>
           <Rating>
             {getRating(data?.rating)}
-            <span>{data?.rating}/5</span>
+            <span className="product-rating-value">{data?.rating}/5</span>
           </Rating>
           <Prices>
-            <div className="price">${data?.price}</div>
+            <CurrentPrice>${data?.price}</CurrentPrice>
             {data?.oldPrice && (
               <>
-                <div className="old">${data.oldPrice}</div>
-                <div className="discount">
+                <OldPrice>${data?.oldPrice}</OldPrice>
+                <Discount>
                   -
                   {Math.round(
                     ((data.oldPrice - data.price) / data.oldPrice) * 100
                   )}
                   %
-                </div>
+                </Discount>
               </>
             )}
           </Prices>
@@ -96,60 +193,158 @@ function ProductDetails() {
           <Divider />
           <Colors>
             <h3>Select Colors</h3>
-            <div className="colors-wrap">
-              {colorsList.map((c) => (
-                <div
-                  key={c.code}
-                  className="color-box"
-                  onClick={() => setSelectedColor(c.code)}
-                  style={{ backgroundColor: c.code }}
+            <div className="colors">
+              {colorsList.map((color) => (
+                <ColorOption
+                  key={color.code}
+                  color={color.code}
+                  onClick={() => handleSelect(color.code)}
                 >
-                  {selectedColor === c.code && (
+                  {selectedColor === color.code && (
                     <TickIcon height={16} width={20} />
                   )}
-                </div>
+                </ColorOption>
               ))}
             </div>
           </Colors>
           <Divider />
           <Sizes>
             <h3>Choose Size</h3>
-            <div className="sizes-wrap">
-              {data?.size.map((s, i) => {
-                const obj = sizeList.find((x) => x.code === s);
+            <SizeList>
+              {data?.size.map((sizeCode, index) => {
+                const sizeObj = sizeList.find((s) => s.code === sizeCode);
                 return (
-                  <div
-                    key={i}
+                  <SizeItem
+                    key={index}
+                    onClick={(e) => handleSize(e, sizeObj?.name)}
                     className="size-item"
-                    onClick={(e) => handleSize(e, obj?.name)}
                   >
-                    {obj?.name}
-                  </div>
+                    {sizeObj?.name}
+                  </SizeItem>
                 );
               })}
-            </div>
+            </SizeList>
           </Sizes>
           <Divider />
           <AddCart>
-            <div className="quantity">
-              <button className="quantity-btn" onClick={handleQuantity}>
-                -
-              </button>
-              <span>{quantity}</span>
-              <button className="quantity-btn" onClick={handleQuantity}>
-                +
-              </button>
-            </div>
-            <button className="add-to-cart-btn" onClick={handleAddToCart}>
+            <QuantityControl>
+              <QuantityButton onClick={handleQuantity}>-</QuantityButton>
+              <span className="quantity-value">{quantity}</span>
+              <QuantityButton onClick={handleQuantity}>+</QuantityButton>
+            </QuantityControl>
+            <AddToCartButton onClick={handleAddToCart}>
               Add to Cart
-            </button>
+            </AddToCartButton>
           </AddCart>
         </Details>
       </ProductCart>
 
-      {/* Reviews & FAQs & Details */}
-      {/* ...similar styled-components usage for reviews section...*/}
-    </>
+      <ReviewsContainer>
+        <ReviewsHeader>
+          {options.map((label, index) => (
+            <ReviewOption
+              key={index}
+              className={activeIndex === index ? "active" : ""}
+              onClick={() => handleOption(index)}
+            >
+              {label}
+            </ReviewOption>
+          ))}
+        </ReviewsHeader>
+        <Divider />
+        {activeIndex === 1 && (
+          <FadeIn>
+            <ReviewsListHeader>
+              <ReviewsTitle>
+                All Reviews <span>(20)</span>
+              </ReviewsTitle>
+              <ReviewActions>
+                <ActionButton>
+                  <FilterIcon opacity={1} />
+                </ActionButton>
+                <ActionButton width="120px" rounded>
+                  Latest
+                </ActionButton>
+                <ActionButton width="150px" rounded>
+                  <button>Write a Review</button>
+                </ActionButton>
+              </ReviewActions>
+            </ReviewsListHeader>
+            <ReviewsList>
+              {reviews.slice(0, visibleCount).map((review, index) => (
+                <ReviewCard
+                  key={index}
+                  width={600}
+                  rating={review.rating}
+                  user={review.user}
+                  verified={review.verified}
+                  text={review.text}
+                  datePosted={review.datePosted}
+                />
+              ))}
+            </ReviewsList>
+            {visibleCount < mockReviews.length && (
+              <LoadMoreButton>
+                <button onClick={handleLoadMore}>Load More Reviews</button>
+              </LoadMoreButton>
+            )}
+          </FadeIn>
+        )}
+
+        {activeIndex === 0 && (
+          <FadeIn>
+            <h3>Product Details</h3>
+            <DetailsList>
+              {productDetails.map((item, index) => (
+                <li key={index}>
+                  <span className="bullet">✔</span> {item}
+                </li>
+              ))}
+            </DetailsList>
+          </FadeIn>
+        )}
+
+        {activeIndex === 2 && (
+          <FadeIn>
+            <h3>
+              <span className="icon">❓</span> Frequently Asked Questions
+            </h3>
+            {productFaqs.map((faq, idx) => (
+              <FAQItem key={idx}>
+                <summary>{faq.question}</summary>
+                <p>{faq.answer}</p>
+              </FAQItem>
+            ))}
+          </FadeIn>
+        )}
+      </ReviewsContainer>
+
+      <YouMightLike>
+        <SectionTitle>You might also like</SectionTitle>
+        <ProductGrid>
+         {products.map((p) => {
+                const discount =
+                  p.oldPrice && p.oldPrice > p.price
+                    ? Math.round((1 - p.price / p.oldPrice) * 100)
+                    : null;
+      
+                return (
+                  <Card
+                    key={p.id}
+                    width={240}
+                    images={p.images}
+                    title={p.title}
+                    rating={p.rating}
+                    price={p.price}
+                    oldPrice={p.oldPrice}
+                    discount={discount}
+                  />
+                );
+              })}
+        
+        </ProductGrid>
+      </YouMightLike>
+    </Container>
   );
 }
 
