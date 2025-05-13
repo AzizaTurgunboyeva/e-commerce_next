@@ -56,5 +56,3 @@ export const ButtonWrapper = styled.button`
     padding: 0 12px;
   }
 `;
-
-

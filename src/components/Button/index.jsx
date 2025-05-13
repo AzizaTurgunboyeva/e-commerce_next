@@ -1,5 +1,5 @@
-import { btnTypes, btnSizes } from "./constants";
-import { ButtonWrapper } from "./ButtonWrapper.styled";
+import { ButtonWrapper } from "./Buttonwrapper.styled";
+import { btnSizes, btnTypes } from "./constant";
 
 const Button = (props) => {
   const {
@@ -19,4 +19,3 @@ const Button = (props) => {
 };
 
 export default Button;
- 

@@ -1,17 +1,15 @@
 import React from "react";
 import { FaCircleCheck, FaEllipsis } from "react-icons/fa6";
-import StarRate from "../components/startRate.jsx";
 import { ReviewCardWrapper } from "./Review.styled.js";
+import StarRate from "../components/startRate.jsx";
 
-export default function ReviewCard({c, width}) {
- 
-  const  { rating, user, verified, text, datePosted } =c;
+export default function ReviewCard(c) {
+  const { rating,width, user, verified, text, datePosted } = c;
   const showExtras = width > 400;
   console.log(c);
-  
+
   return (
     <ReviewCardWrapper width={width}>
-     
       <div className="header">
         <StarRate rating={rating} />
         {showExtras && <FaEllipsis className="moreIcon" />}

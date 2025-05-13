@@ -1,67 +1,67 @@
-import React, { useRef } from "react";
-import Slider from "react-slick";
-import { ReviewsSectionWrapper } from "./Reviews.styled.js";
+// src/app/Main/components/Reviews/ReviewSection.jsx
+import React from "react";
+
+// 1️⃣ React-wrapper and CSS
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+
+// 2️⃣ Correct module import
+import { Navigation } from "swiper/modules";
+
+
+import { GoArrowLeft, GoArrowRight } from "react-icons/go";
 import { useComments } from "../../../../hooks/useComments";
-import ReviewCard from "../../../../components/common/Review";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+import ReviewCard from "../../../../components/Review";
+import {
+  CommentsSection,
+  CustomersHeader,
+  IconsContainer,
+  NavButton,
+  HappyCustomersWrapper,
+} from "./Review.styled";
 
-// slick CSS import once in your app root (e.g. main.jsx):
-// import "slick-carousel/slick/slick.css";
-// import "slick-carousel/slick/slick-theme.css";
-
-const ReviewSection = () => {
-  const { data, isLoading, isError, error } = useComments();
-  const sliderRef = useRef(null);
-console.log("koment", data);
-
+export default function ReviewSection() {
+  const { data = [], isLoading, isError, error } = useComments();
   if (isLoading) return <p>Loading…</p>;
   if (isError) return <p>Error: {error.message}</p>;
 
-  const settings = {
-    infinite: true,
-    speed: 500,
-    slidesToShow: 3,
-    slidesToScroll: 1,
-    swipe: true,
-    draggable: true,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 2 } },
-      { breakpoint: 600, settings: { slidesToShow: 1 } },
-    ],
-  };
-
   return (
-    <ReviewsSectionWrapper>
-      <div className="top">
-        <h2>OUR HAPPY CUSTOMERS</h2>
-        <div className="navButtons">
-          <button onClick={() => sliderRef.current?.slickPrev()}>
-            <FaArrowLeft />
-          </button>
-          <button onClick={() => sliderRef.current?.slickNext()}>
-            <FaArrowRight />
-          </button>
-        </div>
-      </div>
+    <CommentsSection>
+      <CustomersHeader>
+        <h3>OUR HAPPY CUSTOMERS</h3>
+        <IconsContainer>
+          <NavButton className="swiper-button-prev-custom">
+            <GoArrowLeft />
+          </NavButton>
+          <NavButton className="swiper-button-next-custom">
+            <GoArrowRight />
+          </NavButton>
+        </IconsContainer>
+      </CustomersHeader>
 
-      <Slider ref={sliderRef} {...settings}>
-        {data?.map((c) => (
-          <ReviewCard
-          key={c?.id}
-          width={400}
-          // review={{
-          //   rating: c.rating,
-          //   userName: c.user,
-          //   verified: c.verified,
-          //   comment: c.text,
-          //   datePosted: c.date,
-          // }}
-          c={c}
-          />
-        ))}
-      </Slider>
-    </ReviewsSectionWrapper>
+      <HappyCustomersWrapper>
+        <Swiper
+          modules={[Navigation]} // ✅ pass it here
+          navigation={{
+            prevEl: ".swiper-button-prev-custom",
+            nextEl: ".swiper-button-next-custom",
+          }}
+          spaceBetween={20}
+          slidesPerView={1}
+          breakpoints={{
+            640: { slidesPerView: 1 },
+            768: { slidesPerView: 2 },
+            1024: { slidesPerView: 3 },
+          }}
+        >
+          {data.map((rev, i) => (
+            <SwiperSlide key={i}>
+              <ReviewCard reviews={rev} width={300} />
+            </SwiperSlide>
+          ))}
+        </Swiper>
+      </HappyCustomersWrapper>
+    </CommentsSection>
   );
-};
-
-export default ReviewSection;
+}

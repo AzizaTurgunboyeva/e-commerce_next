@@ -1,8 +1,8 @@
 import React from 'react'
 import { StayUptoWrapper } from './StayUp.styled'
 import { TfiEmail } from "react-icons/tfi";
-import Button from '../../../components/common/Button';
-import { btnSizes, btnTypes } from '../../../components/common/Button/constants';
+import Button from '../../../components/Button';
+import { btnSizes, btnTypes } from '../../../components/Button/constant';
 
 const FooterDetail = () => {
   return (

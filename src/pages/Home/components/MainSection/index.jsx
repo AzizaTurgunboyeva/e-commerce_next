@@ -1,10 +1,16 @@
 import React from "react";
-import { BigStar, Brands, HeaderWrapper,MainWrapper, SmallStar } from "./Header.styled";
-import Button from "../../components/common/Button";
-import { btnSizes, btnTypes } from "../../components/common/Button/constants";
-import { models, small,big } from "./images";
+import {
+  BigStar,
+  Brands,
+  HeaderWrapper,
+  MainWrapper,
+  SmallStar,
+} from "./Home.styled";
+import { models, small, big } from "./images";
+import Button from "../../../../components/Button";
+import { btnSizes, btnTypes } from "../../../../components/Button/constant";
 
-const Header = () => {
+const Ad = () => {
   return (
     <MainWrapper>
       <HeaderWrapper>
@@ -23,12 +29,12 @@ const Header = () => {
               <p>200+</p>
               <p>International Brands</p>
             </div>
-         
+
             <div className="highQuaPro">
               <p>2,000+</p>
               <p>High-Quality Products</p>
             </div>
-         
+
             <div className="happyCus">
               <p>30,000+</p>
               <p>Happy Customers</p>
@@ -52,4 +58,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default Ad;

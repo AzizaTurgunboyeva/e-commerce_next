@@ -1,15 +1,21 @@
-import React from 'react'
-import ProductsList from '../../app/Main/components/NewArrival'
-import ReviewCard from '../../components/common/Review';
-import ReviewSection from '../../app/Main/components/Reviews';
+import React from "react";
 
-const Home = () => {
+
+import { useCategories, useProducts } from "../../hooks";
+import { ByDressSection, MainSection, NewArrivalsSection, TopSellingSection } from "./components";
+
+const HomePage = () => {
+  // const {data, isLoading} = useCategories();
+  const { data, isLoading } = useProducts();
+
   return (
-    <>
-      <ProductsList />
-      <ReviewSection/>
-    </>
+    <div>
+      <MainSection />
+      <NewArrivalsSection />
+      <TopSellingSection/>
+      <ByDressSection />
+    </div>
   );
-}
+};
 
-export default Home
+export default HomePage;

@@ -1,27 +1,33 @@
-import React from "react";
-import { Grid, ProductsListWrapper } from "./NewArrial.styled";
-import Card from "../../../../components/common/Card";
+import React, { useState } from "react";
 import { useProducts } from "../../../../hooks/useProducts";
+import Card from "../../../../components/Card";
+import { Grid, ProductsListWrapper } from "./NewArrivals.styled";
 
-export default function ProductsList() {
+export default function NewArrivals() {
   const { data: products = [], isLoading, isError, error } = useProducts();
+  const [visibleCount, setVisibleCount] = useState(4);
+
+  const handleViewAll = () => {
+    setVisibleCount((prev) => Math.min(prev + 4, products.length));
+  };
 
   if (isLoading) return <p>Loading products…</p>;
   if (isError) return <p>Error: {error.message}</p>;
-  const topFour = products.slice(0, 4);
+
+  // slice based on our count
+  const productsToShow = products.slice(0, visibleCount);
+
   return (
     <ProductsListWrapper id="new-arrival">
       <div className="title">
         <p>NEW ARRIVALS</p>
       </div>
       <Grid>
-        {topFour.map((p) => {
+        {productsToShow.map((p) => {
           const discount =
             p.oldPrice && p.oldPrice > p.price
               ? Math.round((1 - p.price / p.oldPrice) * 100)
               : null;
-          const productImages =
-            p?.images && p.images.length > 0 ? p.images[0] : null;
 
           return (
             <Card
@@ -37,9 +43,13 @@ export default function ProductsList() {
           );
         })}
       </Grid>
-      <div className="view-all">
-        <button>View All</button>
-      </div>
+
+      {/* Only show the button if there are more products */}
+      {visibleCount < products.length && (
+        <div className="view-all">
+          <button onClick={handleViewAll}>View All</button>
+        </div>
+      )}
     </ProductsListWrapper>
   );
 }

@@ -14,9 +14,11 @@ export const FooterWrapper = styled.div`
     transform: translateX(-50%);
     padding: 0 20px;
     box-sizing: border-box;
-
     position: relative;
-    z-index: 8;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    z-index: 10;
   }
 `;
 

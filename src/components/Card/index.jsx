@@ -23,13 +23,13 @@ export default function Card(props) {
 
         <div className="c-rate">
           <StarRate rating={rating} />
-          <p>{rating.toFixed(1)}/10</p>
+          <p>{rating?.toFixed(1)}/10</p>
         </div>
 
         <div className="prices">
-          <div className="p-price">${price.toFixed(0)}</div>
+          <div className="p-price">${price?.toFixed(0)}</div>
           {oldPrice != null && (
-            <div className="p-oldPr">${oldPrice.toFixed(0)}</div>
+            <div className="p-oldPr">${oldPrice?.toFixed(0)}</div>
           )}
           {discount != null && <div className="p-discount">-{discount}%</div>}
         </div>
